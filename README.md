@@ -10,6 +10,7 @@ Makes deployment of Storm jobs much simpler and adds a restart option to existin
 -Change ownership of the file - sudo chown muzammilm /usr/local/sbin/stormDeployer
 
 Execution Steps :
+
  --$stormDeployer
 
 Running the above command returns a list of existing topologies.
