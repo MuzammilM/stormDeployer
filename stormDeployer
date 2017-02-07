@@ -1,0 +1,69 @@
+dir="bin/jars/"
+if [ -d "$dir" -a ! -h "$dir" ]
+then
+	echo 
+else
+	mkdir -p $dir
+fi
+
+
+if [ $# -lt 1 ]
+then
+        echo "Possible options : deploy , restart"
+	echo "Current running topologies :"
+	$STORM_HOME/bin/storm list
+        exit
+fi
+case "$1" in
+deploy)
+if [ $# -lt 2 ]
+then
+        echo "Please give a topology name and jar to deploy into storm"
+        exit
+else
+	file="bin/jars/$3.txt"
+	if [ -f "$file" ]
+	then
+		echo "$file found."
+	else
+		echo "Config file not found. Please create a default file in bin/jars with 'jarName className propertyFile TopologyName'"
+		exit
+	fi	
+		
+        echo "Deploying jar "$2
+	echo "Topology : "$3
+        echo "Killing existing topology"
+        $STORM_HOME/bin/storm kill $3 -w 00
+        echo "Sleeping for 1 minute to finish removing existing jar"
+        sleep 20s
+	x=`cat $file`
+	cut -d' ' -f2- $file > $file.temp
+	more $file.temp > $file
+	u=`echo $2 | sed 's,/,\\\/,g'`
+	sed 's/^/'$u' /' $file > $file.tmp
+	more $file.tmp > $file
+	jarProps=`more $file`
+	$STORM_HOME/bin/storm jar $jarProps
+fi
+;;
+        restart)
+        file="bin/jars/$2.txt"
+        if [ -f "$file" ]
+        then
+                echo "$file found."
+        else
+                echo "Config file not found. Please create a default file in bin/jars with 'jarName className propertyFile TopologyName'"
+                exit
+        fi
+
+        x=`cat $file`
+	echo $x
+        $STORM_HOME/bin/storm kill $2
+        echo "Sleeping for 1 minute to finish removing existing jar"
+        sleep 20s
+	jarProps=`more $file`
+        $STORM_HOME/bin/storm jar $jarProps
+
+;;
+
+esac
