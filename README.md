@@ -39,3 +39,5 @@ Running the above command will restart the topology .
 
 PS : Any contribution and constructive criticism is greatly appreciated. 
 
+## Install utility via curl
+    mkdir -p ~/bin/shellscript && sudo curl -s https://raw.githubusercontent.com/MuzammilM/stormDeployer/master/stormDeployer.sh -o ~/bin/shellscript/stormDeployer.sh && sudo ln -s /home/$USER/bin/shellscript/stormDeployer.sh /usr/bin/stormDeployer && sudo chmod +x /usr/bin/stormDeployer
